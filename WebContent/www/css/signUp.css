@@ -1,0 +1,199 @@
+@CHARSET "UTF-8";
+
+@font-face{
+		font-family: 'orbitron';
+		src: url('../font/orbitron-black-webfont.woff') format('woff');
+}
+@font-face{
+		font-family: 'orbitron-l';
+		src: url('../font/orbitron-light-webfont.woff') format('woff');		
+}
+@font-face{
+		font-family: 'nanumGothic';
+		src: url('../font/nanumGothic.woff') format('woff');		
+}
+* { margin: 0; padding: 0;}
+:focus { outline: 0;}
+body { font-family: 'orbitron',' sans-serif; background: #fb887c; overflow: hidden;}
+
+header {font-family: 'orbitron'; height: 60px; line-height: 60px; background: #fb887c; 
+text-align: center; color: #fff; font-size: 200%; font-weight: bold;}
+header>a { position: absolute; left: 0; width: 70px;
+text-decoration: none; color: #fff; font-size: 80%;}
+
+.direction{font-family: 'nanumGothic';color: white; padding: 0.5em 1em 0em 1em;}
+.directionP{opacity:0.9;font-size:1.5em; font-weight: bold;}
+.expSurvey{color:black;opacity: 0.5;font-size:0.7em;}
+.survey{;width: 100%;}
+
+
+.simForm{background: rgba(0,0,0,.05); display: block; position: relative; margin: 0 auto; width: 100%;text-align: left;}
+.simform-inner{ margin: 0 auto;position: relative; padding: 2em 1em; height: auto; z-index: 0;}
+
+
+.questions{ font-family:'orbitron' ;color:white;color: rgba(0,0,0,0.45);z-index: 0;}
+
+ol{	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+	-webkit-transition: height 0.4s;
+	transition: height 0.4s; }
+	ul{	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+	-webkit-transition: height 0.4s;
+	transition: height 0.4s; }
+ol:before{
+	background-color: rgba(0,0,0,0.1);
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 2.35em; }
+li{display: list-item; text-align: -webkit-match-parent;}
+.questions li{ width:100%; height: 0%; height: 0;  visibility: hidden;  z-index:0; position: relative;
+								transition: visibility 0s 0.4s, height 0s 0.4s;display: list-item; text-align: -webkit-match-parent;}
+.questions li.current{visibility: visible;	/* border: 1px solid black; */
+	height: auto;
+	-webkit-transition: none;
+	transition: none;}
+
+.questions li span{height: 50px; padding-left: 5px; vertical-align: middle; }
+
+.questions li > span {
+	display: block;
+	overflow: hidden;
+}
+.questions li > span label {
+	display: block;
+	-webkit-transition: -webkit-transform 0.4s;
+	transition: transform 0.4s;
+	-webkit-transform: translateY(-100%);
+	transform: translateY(-100%);
+}
+
+.questions li.current > span label {
+	-webkit-transition: none;
+	transition: none;
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+}
+.questions input{ 
+		opacity:0; 
+		background:transparent;	
+		font-family:'nanumGothic'; 
+		height: 30px; 
+		line-height: 25px; 
+		text-indent: 10px; 
+		font-size: 100%; color: white; z-index: 0px;
+		margin: 0.3em 0 0 0;
+		padding: 0.5em 1em 0.5em 0.7em;
+		width: calc(100% - 4em);
+		}
+
+.questions .current input{background:black; opacity: 0.3; /* border: 1px solid black; */}
+
+.questions li > ul {
+	visibility: visible;
+	color: white;		
+}
+.questions li.current > ul li{visibility: visible; opacity:1;}
+.questions li > ul li{visibility: hidden; min-width: 150px ; height: 32px;  margin-bottom: 0.5em; opacity:0;}
+.questions li > ul li .check{margin: 10px 0px 0px 10px; width: 20px; height: 20px; float: left; margin: 0 1em 0 1em;}
+
+.checked{
+		width: 30px;
+		height: 30px;
+		background-image: url('img/check.png');
+		background-repeat: no-repeat;
+		background-size: 20px 20px;
+}
+.questions li > ul li label{ height: 30px; line-height: 30px; font-size: 1.0em;}
+
+.input_hidden {
+    position: absolute;
+    left: -9999px;
+}
+
+.simform-inner .progress {
+	width: 0%;
+	height: 0.15em;
+	margin-top: 94px;
+	background: rgba(0,0,0,0.3);
+	-webkit-transition: width 0.4s ease-in-out;
+	transition: width 0.4s ease-in-out;
+}
+
+.simform-inner .progress::before {
+	width: calc(100% - 4.3em);
+	position: absolute;
+	top: auto;
+	height: inherit;
+	background: rgba(0,0,0,0.05);
+	content: '';
+}
+	/* Next question button */
+	.btnNext {
+	position: absolute;
+	right: 1em;
+	top: 6em; /* padding-bottom of form plus progress bar height */
+	display: block;
+	padding: 0;
+	width: 2em;
+	height: 2em;
+	border: none;
+	background: none;
+	color: rgba(0,0,0,0.4);
+	text-align: center;
+	opacity: 0;
+	z-index: 100;
+	cursor: pointer;
+	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+	transition: transform 0.3s, opacity 0.3s;
+	-webkit-transform: translateX(-20%);
+	transform: translateX(-20%);
+	pointer-events: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}					
+.btnNext::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	line-height: 2;
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.btnNext i {font-size: 1.5em;}
+.btnNext.show {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+	pointer-events: auto;
+}
+
+
+input {opacity:0.2;background:black;	font-family: 'nanumGothic';width: 100%; height: 30px; padding-top: 20px; line-height: 25px;border: 0px;
+											text-indent: 10px; font-size: 100%;  color: white; /* font-family: 'nanumGothic'; border: 0px; display: block; width: 100%; height: 30px; padding-top: 20px;
+text-indent: 30px; font-size: 100%;  */}
+#email { /* border-top: 1px solid #999; */}
+#password { border-top: 1px solid #999;}
+#btnStart {font-family: 'orbitron'; width: 100%; height: 55px; background: #F05630; 
+-webkit-transition: background-color .4s ease-out;
+color: #fff; font-size: 200%; font-weight: bolder;}
+#btnStart:disabled { background: #999; }
+
+#emailValidate, #emailCheck {font-family: 'nanumGothic'; position: absolute; top: 6px; font-size: 0.8em;
+text-indent: 10px; color: white;}
+
+footer { text-align: center; margin-top: 5px; margin-bottom:5px; bottom: 0px; font-size: 0.8em;}
+footer a{color:white; text-decoration: none;}
+button{ border: none;}
+
+#terms { margin-right: 50px;}
+
+.bottomEle{position: fixed; bottom: 0px;width: 100%;}

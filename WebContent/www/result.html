@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+<link rel="stylesheet" href="font/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/lineconStyle.css">
+<link rel="stylesheet" href="css/common_font.css">
+<link rel="stylesheet" href="css/result.css">
+
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
+<script type="text/javascript" src="js/jquery.drawDoughnutChart.js"></script>
+<!-- <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script> -->
+<script type="text/javascript" src="js/kakao-1.0.9.min.js"></script>
+<script type="text/javascript" src="js/sha1.js"></script>
+<script type="text/javascript" src="js/result.js"></script>
+<script type="text/javascript" src="js/sns.js"></script>
+<title>Result</title>
+<style type="text/css">
+#facebook { width: 100px; height: 50px; margin-left: 50px; font-size: 130%;}
+
+#share { position: absolute; top: 355px; right: 10px; width: 40px; height: 45px; z-index: 9; 
+opacity: 0.35;}
+#shareDiv {  position: absolute; bottom: 10%; width: 100%; 
+text-align: center; }
+#shareDiv img { width: 40px; height: 40px; margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
+</style>
+</head>
+
+<body>
+<span>
+<script type="text/javascript" src="//media.line.me/js/line-button.js?v=20140411" ></script>
+<script type="text/javascript">
+new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://172.20.10.2:1110/sns/snsResult.jsp","withUrl":false});
+</script>
+</span>
+
+<a id="kakao-link-btn" href="javascript:;">
+	<img src="http://dn.api1.kage.kakao.co.kr/14/dn/btqa9B90G1b/GESkkYjKCwJdYOkLvIBKZ0/o.jpg" />
+</a>
+
+<div class="header" data-role="header"><a class="mainLink" onclick="location.href='main.html';">&lt;</a><p>LOG Result</p></div>
+<div id="date">
+	<span class="left">&lt;</span><span class="right">&gt;</span>
+	<p id="stDt"></p>
+</div>
+
+<section id="layout">
+<div id="rtScroll">
+	<p id="description"></p>
+	<div id="resultList"></div>
+	<div id="chart"></div>
+</div>
+</section>
+
+<div class="random" onclick="location.href='other_people.html';">?</div>
+<div id="type">CHART</div>
+
+<img id="share" src="icon/sh-transparent.png" style="display: none;">
+
+<div id="shareDiv" style="display: none;"><!-- style="display: none;"-->
+	<img id="facebook" src="icon/f-Facebook.png">
+	<img id="twitter" src="icon/t-twitter.png">
+	<img id="kakaotalk" src="icon/k-kakao.png">
+	<img id="kakaostory" src="icon/ks-kakaoStory.png">
+	<img id="band" src="icon/b-BAND.png">
+	
+</div>
+
+<div class="range listNavi">
+	<div id="day" class="dateNavi">1D</div>
+ 	<div id="week" class="weekNavi">1W</div>
+	<div id="month" class="monthNavi">1M</div>
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+var shareHide = true;
+
+$(function(){
+	$('#share').on('click', function(){
+		if (shareHide) { $('#shareDiv').fadeToggle(1000); shareHide = false;}
+		else { $('#shareDiv').fadeToggle(400); shareHide = true;}
+	})
+	
+	$('#shareDiv>img').on('click', function(e) {
+		console.log(e.target.id);
+		
+		
+		var sns = e.target.id;
+		var url = 'http://14.32.66.98:1110/sns/snsResult.jsp?p=';
+		var txt = 'semiLog';
+		
+		var urlParam = SHA1(userNo + new Date());
+		var period = $('#stDt').text();
+		
+		// 결과용 데이터 node.js 로 전송
+		var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
+		
+		// 모바일이거나, 페북이거나, 트윗이면
+		if(isMobile || sns=='facebook' || sns=='twitter') {
+			
+			
+			// 테스트 코드
+			/* url += urlParam;
+			console.log(url);
+			sendSns(sns, url, txt); */
+			
+			
+			// 실제 코드
+			$.post('http://14.32.66.98:1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
+			.done(function(data) {
+				console.log(data);
+				url += urlParam;
+				console.log(url);
+				sendSns(sns, url, txt);
+			});
+		} else {
+			alert('모바일 전용');
+		}
+			
+		
+	});
+	
+});
+
+
+// ------------------- 카카오 Link
+//사용할 앱의 Javascript 키를 설정해 주세요.
+Kakao.init('4793e016164b581fe2eff90fc0d7550e');
+
+// 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+Kakao.Link.createTalkLinkButton({
+  container: '#kakao-link-btn',
+  label: 'DragLog',
+  image: {
+    src: 'http://172.20.10.2:1110/sns/img/semiLog_logo.png',
+    width: '100',
+    height: '100'
+  },
+  webButton: {
+    text: 'DragLog',
+    url: 'http://172.20.10.2:1110/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+  }
+});
+</script>
+</html>
