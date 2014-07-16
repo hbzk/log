@@ -12,9 +12,8 @@
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
 <script type="text/javascript" src="js/jquery.drawDoughnutChart.js"></script>
-<!-- <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script> -->
-<script type="text/javascript" src="js/kakao-1.0.9.min.js"></script>
 <script type="text/javascript" src="js/sha1.js"></script>
+<script type="text/javascript" src="js/setting.js"></script>
 <script type="text/javascript" src="js/result.js"></script>
 <script type="text/javascript" src="js/sns.js"></script>
 <title>Result</title>
@@ -92,7 +91,7 @@ $(function(){
 		
 		
 		var sns = e.target.id;
-		var url = 'http://14.32.66.98:1110/sns/snsResult.jsp?p=';
+		var url = 'http://'+serverUrl+':1110/sns/snsResult.jsp?p=';
 		var txt = 'semiLog';
 		
 		var urlParam = SHA1(userNo + new Date());
@@ -112,7 +111,7 @@ $(function(){
 			
 			
 			// 실제 코드
-			$.post('http://14.32.66.98:1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
+			$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
 			.done(function(data) {
 				console.log(data);
 				url += urlParam;
@@ -138,13 +137,13 @@ Kakao.Link.createTalkLinkButton({
   container: '#kakao-link-btn',
   label: 'DragLog',
   image: {
-    src: 'http://172.20.10.2:1110/sns/img/semiLog_logo.png',
+    src: 'http://'+serverUrl+':1110/sns/img/semiLog_logo.png',
     width: '100',
     height: '100'
   },
   webButton: {
     text: 'DragLog',
-    url: 'http://172.20.10.2:1110/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+    url: 'http://'+serverUrl+':1110/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
   }
 });
 </script>

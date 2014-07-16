@@ -10,6 +10,8 @@ select { width: 100px; height: 50px; margin: 50px 0 0 50px; }
 #submit { width: 100px; height: 30px; margin: 0px;}
 </style>
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/setting.js"></script>
+
 </head>
 <body>
 
@@ -29,7 +31,7 @@ select { width: 100px; height: 50px; margin: 50px 0 0 50px; }
 $(function(){
 	$('#submit').on('click', function(){
 		var sns = $('#select option:selected').val();
-		var url = 'http://14.32.66.98:1110/sns/snsResult.html';
+		var url = 'http://'+serverUrl+':1110/sns/snsResult.html';
 		var txt = 'My Log';
 		sendSns(sns, url, txt);
 	});

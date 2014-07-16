@@ -6,6 +6,7 @@
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/sha1.js"></script>
 <script type="text/javascript" src="js/jquery.toastmessage.js"></script>
+<script type="text/javascript" src="js/setting.js"></script>
 <link rel="stylesheet" href="css/jquery.toastmessage.css">
 <title>LOG IN</title>
 <style type="text/css">
@@ -82,16 +83,23 @@ function validateEmail() {
   if (emailVal.length > 4 && emailVal.match("@") &&
       emailVal.indexOf("@") + 1 < emailVal.indexOf(".", emailVal.indexOf("@")) &&
       emailVal.length - 1 > emailVal.indexOf(".", emailVal.indexOf("@"))) {
-    $('#emailValidate').text('가입되지 않은 이메일 입니다.');
       return true;
   } else {
     return false;
   }
 }
-
 //이메일 가입 여부 확인
 function validateForm() {
-  $.post("http://14.32.66.98:1111/emailCheck", { email: $('#email').val()})
+	// 이메일 및 암호 한글자 이상 입력시 START 버튼 활성화 
+	if (validateEmail() && $('#password').val().length > 0) {
+		$('#btnStart').removeAttr('disabled');
+	} else {
+		$('#btnStart').attr('disabled', 'disabled');
+	}
+};
+
+/* function validateForm() {
+  $.post('http://'+serverUrl+':1111/emailCheck', { email: $('#email').val()})
     .done(function(data) {
       if (data == 'already') {
         $('#emailCheck').text('가입되어 있는 이메일입니다.');
@@ -109,11 +117,14 @@ function validateForm() {
         $('#btnStart').attr('disabled', 'disabled');
       }
   });
-}
+} */
 
 $("#btnStart").click(function(){
-  console.log(SHA1($('#password').val()));
-  $.post('http://14.32.66.98:1111/login', { email : $('#email').val(), password: SHA1($('#password').val()) })
+	$.post('http://'+serverUrl+':1111/emailCheck', { email: $('#email').val()})
+    .done(function(isMember) {
+    		console.log(isMember);
+    });
+  /* $.post('http://'+serverUrl+':1111/login', { email : $('#email').val(), password: SHA1($('#password').val()) })
     .done(function(data){
       console.log(data);
       if (data == 'no') {
@@ -129,7 +140,7 @@ $("#btnStart").click(function(){
       } else {
         db_updateUser(data);
       }
-    });
+    }); */
 });
 
 function db_updateUser(user){

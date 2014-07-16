@@ -244,10 +244,10 @@ app.post('/emailCheck',function(req,res){
 		dbconn.query('SELECT * FROM USER WHERE EMAIL = ?', email, function(err, rows){
 			if (err) {console.log(err);}
 			if (rows.length) { 
-				res.send('already'); 
+				res.send(true);
 			} 
 			else { 
-				res.send('empty'); 
+				res.send(false); 
 			}
 		});
 	}

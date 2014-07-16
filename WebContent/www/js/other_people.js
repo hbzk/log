@@ -32,7 +32,7 @@ var db_submitLog = function(){
 					logList.push(logObj);
 				}
 				
-				$.post('http://14.32.66.98:1111/submitLog', {'logList' : logList}).done(function(data){
+				$.post('http://'+serverUrl+':1111/submitLog', {'logList' : logList}).done(function(data){
 					console.log(data);
 				});
 				
@@ -56,7 +56,7 @@ var db_getOtherLog = function(){
 				$("#member").css("display", "");
 				$("#notMember").css("display", "none");
 				
-				$.post('http://14.32.66.98:1111/other', me).done(function(data){
+				$.post('http://'+serverUrl+':1111/other', me).done(function(data){
 					// 유저 정보 가공 후 출력
 					var otherUser = data[0];
 				
