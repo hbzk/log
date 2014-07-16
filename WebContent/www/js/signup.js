@@ -5,69 +5,75 @@ var user;
 var questionList = [];
 var statusChecker = 1;
 
+var indexList = 0;
+
 $(function(){
 	$(".lastQ").click(function(){
 		validateForm();
 	});
-});
-
-//다음 질문과 input보여주기(next button control)
-questionList = $(".questions").children();
-var indexList = 0;
-$(".btnNext").click(function(){
 	
-	if(indexList<6){
-	$(questionList[indexList]).removeClass("current");
-	indexList++;
-	statusChecker++;
-	$(questionList[indexList]).addClass("current");
-	$(".btnNext").removeClass("show");
-	}else if(indexList = 6){
+	//다음 질문과 input보여주기(next button control)
+	questionList = $(".questions").children();
+	$(".btnNext").click(function(){
+		
+		if(indexList<6){
+		$(questionList[indexList]).removeClass("current");
+		indexList++;
 		statusChecker++;
+		$(questionList[indexList]).addClass("current");
 		$(".btnNext").removeClass("show");
-	}
-});
-
-//age input창에 값이 입력된 후에만 nextButton활성화하기
-$(".questions li input").keyup(function(e){
-	var inputValue = $(".questions li input").val();
+		}else if(indexList = 6){
+			statusChecker++;
+			$(".btnNext").removeClass("show");
+		}
+	});
 	
-	console.log(inputValue);
-	if($(".questions li input").val().length>3){
+	//age input창에 값이 입력된 후에만 nextButton활성화하기
+	$(".questions li input").keyup(function(e){
+		var inputVal = $(".questions li input").val();
+		
+		if($(".questions li input").val().length>3){
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		
+		
+		if (indexList<6 && numCheck(inputVal)) {
+			$(".btnNext").addClass("show");
+		} else {
+			$(".btnNext").removeClass("show");
+		}
+
+	});
+	
+	
+	//radio버튼 숨기기
+	$('.questions li > ul li input:radio').addClass('input_hidden');
+
+	//선택된 상태 체크
+	$('.questions li > ul li label').click(function(e){
+		if(indexList<6){
+			selectCheck(e.target);
+			if($(this).siblings("input").val())
+			if(radioCheck()){
+				$(".btnNext").addClass("show");
+			}else{
+				$(".btnNext").removeClass("show");
+			}
+		}else{ //마지막 항목
+			selectCheck(e.target);
+			$(".btnNext").removeClass("show");
+		}
+	});
+	
+	
+	$('#btnStart').click(function(e){
 		e.preventDefault();
-		e.stopPropagation();
-	}
-	var num_check=/^[0-9]*$/;
-	if(inputValue == 0){console.log("0은입력할수없습니다.");}
-	if(indexList<6 && num_check.test(inputValue) && inputValue != 0 ){
-		if($(".questions li input").val() != null){
-			$(".btnNext").addClass("show");
-		}else{
-			$(".btnNext").removeClass("show");
-		}
-	}else{
-		$(".btnNext").removeClass("show");
-	}
+			signupSubmit();
+	});
 });
 
-//radio버튼 숨기기
-$('.questions li > ul li input:radio').addClass('input_hidden');
 
-//선택된 상태 체크
-$('.questions li > ul li label').click(function(e){
-	if(indexList<6){
-		selectCheck(e.target);
-		if($(this).siblings("input").val())
-		if(radioCheck()){
-			$(".btnNext").addClass("show");
-		}else{
-			$(".btnNext").removeClass("show");
-		}
-	}else{ //마지막 항목
-		selectCheck(e.target);
-		$(".btnNext").removeClass("show");
-	}
-});
 
 function selectCheck(target){
 		$(target).siblings("input").addClass("rChecked");
@@ -100,6 +106,26 @@ function oninputPwd() {
 	validateForm();
 }
 
+// 숫자 확인
+function numCheck(inputVal) {
+	var num_check=/^[0-9]*$/;
+	
+	if (inputVal.length == 0) {
+		$('#numCheck').text('');
+		return false;
+	} else if (inputVal == 0) {
+		$('#numCheck').text('0은 입력할 수 없습니다');
+		return false;
+	} else if (!num_check.test(inputVal)) {
+		$('#numCheck').text('숫자로 입력해주세요');
+		return false;
+	} else {
+		$('#numCheck').text('');
+		return true;
+	}
+}
+
+
 // 메일 형식 검증
 function validateEmail() {
 	if (emailVal.length > 4 && emailVal.match("@") &&
@@ -116,13 +142,12 @@ function validateForm() {
 	
 	$.post('http://'+serverUrl+':1111/emailCheck', { email: $('#email').val()})
 		.done(function(data) {
-			if (data == 'already') {
+			if (data) {
 				$('#emailCheck').text('이미 가입된 이메일입니다.');
 				$('#btnStart').attr('disabled', 'disabled');
 				
 			} else { // 가입된 이메일이 아닐때
 				$('#emailCheck').text('');
-				console.log(statusChecker);
 				// 추가 조건 확인 후 버튼 활성화
 				if (validateEmail() && $('#password').val().length > 0 && statusChecker ==7 ) {
 					
@@ -133,12 +158,6 @@ function validateForm() {
 			}
 	});
 }
-
-$('#btnStart').click(function(e){
-	e.preventDefault();
-		signupSubmit();
-});
-
 
 
 function signupSubmit(){
@@ -173,6 +192,7 @@ function signupPost(user) {
 			}
 	});
 }
+
 function db_updateUser(user){
 	db.transaction(function(tx){
 		console.log(user.email);
@@ -187,5 +207,3 @@ function db_errorCB(e) { // query 에러시 호출 함수
 	console.log(e);
 	console.log("e.message :" + e.message);
 }
-
-

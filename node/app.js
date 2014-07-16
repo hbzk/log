@@ -222,15 +222,15 @@ app.post('/login', function(req,res){
             throw err;
 		}
 		else {
-			if (rows[0].PASSWORD == password) {
-				//res.cookie('email', req.body.email);
+			if (rows.length == 0) {
+				res.send(false);
+			} else if (rows[0].PASSWORD == password) {
 				var user = rows[0];
 				console.log(user);
 				user.PASSWORD = '';
-				
 				res.send(user);
 			} else {
-				res.send('no');
+				res.send(false);
 			}
 		}
 	});

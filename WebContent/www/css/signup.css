@@ -21,10 +21,11 @@ text-align: center; color: #fff; font-size: 200%; font-weight: bold;}
 header>a { position: absolute; left: 0; width: 70px;
 text-decoration: none; color: #fff; font-size: 80%;}
 
-.direction{font-family: 'nanumGothic';color: white; padding: 0.5em 1em 0em 1em;}
-.directionP{opacity:0.9;font-size:1.5em; font-weight: bold;}
-.expSurvey{color:black;opacity: 0.5;font-size:0.7em;}
-.survey{;width: 100%;}
+.direction {font-family: 'nanumGothic';color: white; padding: 0.5em 1em 0em 1em;}
+.directionP {opacity:0.9;font-size:1.5em; font-weight: bold;}
+.expSurvey {color:black;opacity: 0.5;font-size:0.7em;}
+.survey{width: 100%;}
+
 
 
 .simForm{background: rgba(0,0,0,.05); display: block; position: relative; margin: 0 auto; width: 100%;text-align: left;}
@@ -189,6 +190,9 @@ color: #fff; font-size: 200%; font-weight: bolder;}
 
 #emailValidate, #emailCheck {font-family: 'nanumGothic'; position: absolute; top: 6px; font-size: 0.8em;
 text-indent: 10px; color: white;}
+
+#numCheck { position: absolute; top: 70px; left: 20px;  
+font-family: 'nanumGothic'; font-size: 0.8em; color: white;}
 
 footer { text-align: center; margin-top: 5px; margin-bottom:5px; bottom: 0px; font-size: 0.8em;}
 footer a{color:white; text-decoration: none;}

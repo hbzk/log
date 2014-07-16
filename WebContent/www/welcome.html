@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/setting.js"></script>
 <title>Welcome</title>
 <style>
 @font-face{
@@ -111,7 +112,7 @@ var db = window.openDatabase("Database", "1.0", "LogDB", 2 * 1024 * 1024);
 		
 		//사용자ID 서버에 확인
 		function createUser() {
-			$.get("http://hancs.iptime.org:1111/createUser").done(function(userId){
+			$.get('http://'+serverUrl+':1111/createUser').done(function(userId){
 				console.log(userId);
 				db_insertId(userId);
 			});
