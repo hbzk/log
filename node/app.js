@@ -9,6 +9,11 @@ app.use(morgan('short')); // Logging middleware
 app.use(bodyParser());	// body parsing middleware.
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
+//Exception Handler 등록
+process.on('uncaughtException', function (err) {
+	console.log('Caught exception: ' + err);
+});
+
 var dbconn;
 var db_config = {
 	host : 'localhost',
@@ -256,12 +261,12 @@ app.post('/emailCheck',function(req,res){
 
 // (테스트 용) pathname 없으면 user list 출력
 app.get('/', function(req,res){
-	
 	dbconn.query('SELECT * FROM USER', function(err, rows, fields){
 		if (err) {
 			console.log('Query err');
 			console.log(err);
 		}
+		
 		//console.log(rows);
 		//console.log(fields);
 		res.json(rows);
