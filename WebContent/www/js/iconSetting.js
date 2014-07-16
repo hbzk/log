@@ -26,16 +26,16 @@ $(window).load(function() {
 	//icon클릭했을때 동작
 	$(".activityIcon").on("click",$("i[data-name]"),function(event){
 			//icon은 총 6개만선택가능
-		if( iconCount == 6){
+		if(iconCount == 6){
 			//6개일때는 unselect만 가능
 			if($(event.target).hasClass("fa-check") == true	){
 				unselect(event.target);
 			//6개 일때 클릭하면 알림창 띄우기 (not yet)
-			}else{
+			} else{
 				errorFull();
 				console.log("already fully selected ; 6 icons");
 			}
-		}else if(iconCount < 6){
+		} else if(iconCount < 6){
 		
 			if($(event.target).hasClass("fa-check") == true	){
 				unselect(event.target);
@@ -51,8 +51,9 @@ $(window).load(function() {
 	
 	$(".back").click(function(e){
 		if(iconCount < 6){
-			e.preventDefault();
 			errorUnderSix();
+		} else {
+			location.href='main.html';
 		}
 	});
 	
@@ -169,7 +170,7 @@ function setting_drop() {
 }
 function errorFull() {
 	$().toastmessage('showToast',{
-	    text     : '벌써 6개 선택 다 됐거등요',
+	    text     : '이미 6개 모두 선택 되었습니다',
 	    stayTime : 1500,
 	    sticky   : false,
 	    position : 'middle-center',
@@ -180,7 +181,7 @@ function errorFull() {
 
 function errorUnderSix() {
 	$().toastmessage('showToast',{
-	    text     : '여섯개 선택해야 돼요옷!!!',
+	    text     : '선택한 아이콘이 부족합니다.',
 	    inEffectDuration : 100,
 	    stayTime : 1500,
 	    sticky   : false,
