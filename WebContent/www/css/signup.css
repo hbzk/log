@@ -358,9 +358,10 @@ input {
 }
 
 footer {
+	background: #fb887c;
 	text-align: center;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	bottom: 0px;
 	font-size: 0.8em;
 }
