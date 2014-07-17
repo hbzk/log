@@ -224,7 +224,7 @@ body {
 }
 
 .rtIcon,.rtTime,.rtDuration,.rtDelete {
-	letter-spacing: -0.05em;
+	letter-spacing: -0.07em;
 	float: left;
 	/* border: 1px solid #999; */
 	margin-bottom: 10px;

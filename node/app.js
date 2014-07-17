@@ -78,6 +78,7 @@ app.post('/snsShare', function(req,res){
 	dbconn.query(snsSql, function(err, rows){
 		if (err) {
 			console.log(err);
+			res.send(null);
             throw err;
 		}
 		console.log(rows);

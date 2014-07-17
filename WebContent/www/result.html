@@ -12,19 +12,20 @@
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
 <script type="text/javascript" src="js/jquery.drawDoughnutChart.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript" src="js/sha1.js"></script>
 <script type="text/javascript" src="js/setting.js"></script>
 <script type="text/javascript" src="js/result.js"></script>
 <script type="text/javascript" src="js/sns.js"></script>
 <title>Result</title>
 <style type="text/css">
-#facebook { width: 100px; height: 50px; margin-left: 50px; font-size: 130%;}
-
 #share { position: absolute; top: 355px; right: 10px; width: 40px; height: 45px; z-index: 9; 
 opacity: 0.35;}
 #shareDiv {  position: absolute; bottom: 10%; width: 100%; 
 text-align: center; }
-#shareDiv img { width: 40px; height: 40px; margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
+#shareDiv a { width: 40px; height: 40px; display: inline-block; width: 40px; height: 40px;
+margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
+#shareDiv img { width: 40px; height: 40px; }
 </style>
 </head>
 
@@ -60,11 +61,11 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 <img id="share" src="icon/sh-transparent.png" style="display: none;">
 
 <div id="shareDiv" style="display: none;"><!-- style="display: none;"-->
-	<img id="facebook" src="icon/f-Facebook.png">
-	<img id="twitter" src="icon/t-twitter.png">
-	<img id="kakaotalk" src="icon/k-kakao.png">
-	<img id="kakaostory" src="icon/ks-kakaoStory.png">
-	<img id="band" src="icon/b-BAND.png">
+	<a id="facebook" target="_blank"><img src="icon/f-Facebook.png"></a>
+	<a id="twitter" target="_blank"><img src="icon/t-twitter.png"></a>
+	<a id="kakaotalk" target="_blank"><img src="icon/k-kakao.png"></a>
+	<a id="kakaostory" target="_blank"><img src="icon/ks-kakaoStory.png"></a>
+	<a id="band" target="_blank"><img src="icon/b-BAND.png"></a>
 	
 </div>
 
@@ -80,61 +81,94 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 <script type="text/javascript">
 var shareHide = true;
 
+var txt = 'semiLog';
+var period = $('#stDt').text();
+var baseUrl = 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=';
+var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
+var twitterUrl = 'http://twitter.com/intent/tweet?text=' + txt + '&url='
+var twitterUrl = 'http://twitter.com/intent/tweet?url='
+		
+function makeHref() {
+	console.log('make');
+	var urlParam = SHA1(userNo + new Date());
+	
+	$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
+	.done(function(insertId) {
+		console.log(insertId);
+		if (insertId != '') {
+			$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
+			$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
+			
+		}
+	});
+		
+		
+	
+}
+
 $(function(){
 	$('#share').on('click', function(){
-		if (shareHide) { $('#shareDiv').fadeToggle(1000); shareHide = false;}
-		else { $('#shareDiv').fadeToggle(400); shareHide = true;}
-	})
-	
-	$('#shareDiv>img').on('click', function(e) {
-		console.log(e.target.id);
-		
-		
-		var sns = e.target.id;
-		var url = 'http://'+serverUrl+':1110/sns/snsResult.jsp?p=';
-		var txt = 'semiLog';
-		
-		var urlParam = SHA1(userNo + new Date());
-		var period = $('#stDt').text();
-		
-		// 결과용 데이터 node.js 로 전송
-		var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
-		
-		// 모바일이거나, 페북이거나, 트윗이면
-		if(isMobile || sns=='facebook' || sns=='twitter') {
-			
-			
-			// 테스트 코드
-			/* url += urlParam;
-			console.log(url);
-			sendSns(sns, url, txt); */
-			
-			
-			// 실제 코드
-			$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
-			.done(function(data) {
-				console.log(data);
-				url += urlParam;
-				console.log(url);
-				sendSns(sns, url, txt);
-			});
-		} else {
-			alert('모바일 전용');
+		if (shareHide) { // 숨김 상태일때 
+			$('#shareDiv').fadeToggle(1000); shareHide = false;
+			makeHref();
 		}
-			
-		
-	});
+		else { 
+			$('#shareDiv').fadeToggle(400); shareHide = true;
+		}
+	})
 	
 });
 
 
-/* // ------------------- 카카오 Link
+$('#shareDiv').on('click', 'a', function(e) {
+	console.log(e);
+	var sns = e.currentTarget.id;
+	
+	// 모바일이거나, 페북이거나, 트윗이면
+	var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
+	if(isMobile || sns=='facebook' || sns=='twitter') {
+		
+		// 실제 코드
+		// 결과용 데이터 node.js 로 전송
+		/* $.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
+		.done(function(insertId) {
+			console.log(insertId);
+			if (insertId != '') {
+				
+				var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
+				console.log(facebookUrl+url);
+				
+				$('.facebook').attr('href', facebookUrl+url);
+				console.log($('.facebook'));
+				$($('.facebook')[0]).trigger('click');
+				$($('.facebook')).trigger('click');
+				$('.facebook')[0].click();
+				$('.facebook').click();
+				
+				//window.open(facebookUrl+url, '_blank');
+				
+				//sendSns(sns, url, txt);
+			} else {
+				alert('서버 점검중입니다.');
+			}
+		}); */
+	} else {
+		e.preventDefault();
+		alert('이 기능은 모바일에서만 사용할 수 있습니다.');
+	}
+		
+	
+});
+
+
+
+// ------------------- 카카오 Link
 //사용할 앱의 Javascript 키를 설정해 주세요.
 Kakao.init('4793e016164b581fe2eff90fc0d7550e');
 
 // 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
 Kakao.Link.createTalkLinkButton({
-  container: '#kakao-link-btn',
+  container: '#kakaotalk',
   label: 'DragLog',
   image: {
     src: 'http://'+serverUrl+':1110/sns/img/semiLog_logo.png',
@@ -145,6 +179,6 @@ Kakao.Link.createTalkLinkButton({
     text: 'DragLog',
     url: 'http://'+serverUrl+':1110/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
   }
-}); */
+});
 </script>
 </html>
