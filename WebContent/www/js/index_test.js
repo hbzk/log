@@ -1,15 +1,10 @@
 var db = window.openDatabase("Database", "1.0", "LogDB", 2 * 1024 * 1024);
 
-//db_allDrop();
-//db_init();
-
 $(function(){
 	
 });
 
-
-
-var db_submitLog = function(){
+/*var db_submitLog = function(){
 	db.transaction(function(tx){
 		tx.executeSql('SELECT USER_NO FROM USER', [], function(tx, res){
 			var user_no = res.rows.item(0).USER_NO;
@@ -33,35 +28,45 @@ var db_submitLog = function(){
 			
 		});
 	}, db_errorCB);
-};
+};*/
+
+function db_allDrop(){
+	console.log("alldrop");
+	db.transaction(function(tx) {
+		tx.executeSql('drop table if exists USER');
+		tx.executeSql('drop table if exists LOG');
+		tx.executeSql('drop table if exists ACTION');
+		
+		db_init();
+	}, db_errorCB);
+}
 
 function db_init() {
 	db.transaction(function(tx) {
 		console.log("init");
-		//tx.executeSql('DROP TABLE IF EXISTS USER');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS USER (ID INTEGER PRIMARY KEY, USER_NO UNIQUE, EMAIL, GENDER, AGE, JOB, SALARY, SPEND, SCHOLAR, MARRY)');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOG (ID INTEGER PRIMARY KEY, TITLE, CLASSNAME, START_TIME, END_TIME, DURATION)');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS ACTION (POSITION TEXT, ICON_NAME TEXT PRIMARY KEY, CLASS_NAME TEXT, TIMER_VAL INTEGER, BACK_COL TEXT)');
 		tx.executeSql('INSERT OR IGNORE INTO ACTION '  
-			+ ' SELECT 0 AS POSITION, "headphones" AS ICON_NAME, "fa fa-headphones" AS CLASS_NAME, 80 AS TIMER_VAL, "#DB435C" AS BACK_COL'
-			+ ' UNION SELECT 1,"music", "fa fa-music", 60, "#74DBC5"'
-			+ ' UNION SELECT 2,"automobile", "fa fa-automobile", 60, "#61A74D"'
-			+ ' UNION SELECT 3,"phone", "fa fa-phone", 80, "#F4BCAC"'
-			+ ' UNION SELECT 4,"banknote", "li li_banknote", 60 ,"#477306"'
-			+ ' UNION SELECT 5,"comment", "fa fa-comment", 60, "#D39FE8"'
-			+ ' UNION SELECT 6,"dribbble", "fa fa-dribbble", 60, "#F59D32"'
+			+ ' SELECT 1 AS POSITION, "headphones" AS ICON_NAME, "fa fa-headphones" AS CLASS_NAME, 80 AS TIMER_VAL, "#DB435C" AS BACK_COL'
+			+ ' UNION SELECT 0,"music", "fa fa-music", 60, "#74DBC5"'
+			+ ' UNION SELECT 0,"automobile", "fa fa-automobile", 60, "#61A74D"'
+			+ ' UNION SELECT 0,"phone", "fa fa-phone", 80, "#F4BCAC"'
+			+ ' UNION SELECT 0,"banknote", "li li_banknote", 60 ,"#477306"'
+			+ ' UNION SELECT 0,"comment", "fa fa-comment", 60, "#D39FE8"'
+			+ ' UNION SELECT 0,"dribbble", "fa fa-dribbble", 60, "#F59D32"'
 			+ ' UNION SELECT 0,"plane", "fa fa-plane", 60, "#8A1D30"'
-			+ ' UNION SELECT 0,"gamepad", "fa fa-gamepad", 60, "#35203B"'
+			+ ' UNION SELECT 6,"gamepad", "fa fa-gamepad", 60, "#35203B"'
 			+ ' UNION SELECT 0,"puzzle", "fa fa-puzzle-piece", 60, "#9BB144"'
 			+ ' UNION SELECT 0,"beer", "fa fa-beer", 60, "#FE5850"'
 			+ ' UNION SELECT 0,"glass", "fa fa-glass", 60, "#164065"'
 			+ ' UNION SELECT 0,"video", "li li_video", 60, "#37A1FE"'
 			+ ' UNION SELECT 0,"hospital", "fa fa-hospital-o", 60, "#5C89B2"'
-			+ ' UNION SELECT 0,"cutlery", "fa fa-cutlery", 60, "#87C038"'
-			+ ' UNION SELECT 0,"desktop", "fa fa-desktop", 60, "#F2C12E"'
-			+ ' UNION SELECT 0,"moon", "fa fa-moon-o", 60, "#F27127"'
+			+ ' UNION SELECT 4,"cutlery", "fa fa-cutlery", 60, "#87C038"'
+			+ ' UNION SELECT 3,"desktop", "fa fa-desktop", 60, "#F2C12E"'
+			+ ' UNION SELECT 2,"moon", "fa fa-moon-o", 60, "#F27127"'
 			+ ' UNION SELECT 0,"mobile", "fa fa-mobile", 90, "#F24E29"'
-			+ ' UNION SELECT 0,"coffee", "fa fa-coffee", 60, "#267FB8"'
+			+ ' UNION SELECT 5,"coffee", "fa fa-coffee", 60, "#267FB8"'
 			+ ' UNION SELECT 0,"tv", "li li_tv", 65, "#66D9B8"'
 			+ ' UNION SELECT 0,"shirt", "li li_t-shirt", 60, "#FBDC01"'
 			+ ' UNION SELECT 0,"home", "fa fa-home", 60, "#FFA14A"'
@@ -78,18 +83,10 @@ function db_init() {
 			+ ' UNION SELECT 0,"spoon", "fa fa-spoon", 60, "#F0947C"'
 			+ ' UNION SELECT 0,"code", "fa fa-code", 22, "#064B75"'
 			+ ' UNION SELECT 0,"keyboard", "fa fa-keyboard-o", 60, "#008899"');
-			//db_redirect();
-	}, db_errorCB);
-}
-
-function db_allDrop(){
-	console.log("alldrop");
-	db.transaction(function(tx) {
-		tx.executeSql('drop table if exists USER');
-		tx.executeSql('drop table if exists LOG');
-		tx.executeSql('drop table if exists ACTION');
 		
-		db_init();
+		// 초기화 완료 후 페이지 이동
+		//db_redirect();
+		
 	}, db_errorCB);
 }
 
