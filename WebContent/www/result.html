@@ -54,7 +54,7 @@ margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
 <div id="shareDiv" style="display: none;"><!-- style="display: none;"-->
 	<a id="facebook" target="_blank"><img src="icon/f-Facebook.png"></a>
 	<a id="twitter" target="_blank"><img src="icon/t-twitter.png"></a>
-	<a id="kakaotalk" target="_blank" href="javascript:;"><img src="icon/k-kakao.png"></a>
+	<a id="kakaotalk" href="javascript:;"><img src="icon/k-kakao.png"></a>
 	<a id="line" target="_blank"><img src="icon/line.png"></a>
 </div>
 
@@ -64,8 +64,6 @@ margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
 	<div id="month" class="monthNavi">1M</div>
 </div>
 
-<a href="//line.me/R/msg/text/?http%3A%2F%2F127.0.0.1%3A2222%2Fsns%2FsnsResult.jsp"></a>
-<a id="line" href="http://line.me/R/msg/text/?http%3A%2F%2F127.0.0.1%3A2222%2Fsns%2FsnsResult.jsp%3Fp%3D48908b26b12246302fa39e4495eff36d7774049b"></a>
 
 </body>
 
@@ -96,7 +94,6 @@ function makeHref() {
 				$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
 				$('#line').attr('href', lineUrl + encodeURIComponent(baseUrl) + urlParam);
 				
-				$('#line>span').html('<script type="text/javascript"> new media_line_me.LineButton({"pc":true,"true":"kr","type":"d","text":"http://"+serverUrl+":2222/sns/snsResult.jsp","withUrl":false})');
 				// 카카오톡 링크 버튼을 생성. 처음 한번만 호출
 				Kakao.Link.createTalkLinkButton({
 					  container: '#kakaotalk',
@@ -111,10 +108,12 @@ function makeHref() {
 					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=' + urlParam // kakao dev에 등록한 도메인의 URL이어야 함
 					  }
 				});
+				$('#line>span').html('<script type="text/javascript"> new media_line_me.LineButton({"pc":true,"true":"kr","type":"d","text":"http://'+serverUrl+':2222/sns/snsResult.jsp","withUrl":false})');
 			}
+			nonHref = false;
 		});
 		
-		nonHref = false;
+		
 	}	
 }
 
