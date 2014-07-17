@@ -123,11 +123,14 @@ $(function(){
 $('#shareDiv').on('click', 'a', function(e) {
 	var sns = e.currentTarget.id;
 	
-	// 모바일 아니면서, 페북이나 트윗이 아니면
+	// 모바일 아니면서
 	var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
-	if(!isMobile && sns!='facebook' || sns!='twitter') {
+	if(!isMobile) {
+		// 페북이나 트위터가 아니면
+		if (sns!='facebook' && sns!='twitter') {
 		e.preventDefault();
 		alert('이 기능은 모바일에서만 사용할 수 있습니다.');
+		}
 	}
 });
 
