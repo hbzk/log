@@ -13,6 +13,7 @@
 <script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
 <script type="text/javascript" src="js/jquery.drawDoughnutChart.js"></script>
 <script type="text/javascript" src="js/kakao-1.0.9.js"></script>
+<script type="text/javascript" src="js/line-button.js"></script>
 <script type="text/javascript" src="js/sha1.js"></script>
 <script type="text/javascript" src="js/setting.js"></script>
 <script type="text/javascript" src="js/result.js"></script>
@@ -30,16 +31,6 @@ margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
 </head>
 
 <body>
-<!-- <span>
-<script type="text/javascript" src="//media.line.me/js/line-button.js?v=20140411" ></script>
-<script type="text/javascript">
-new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://172.20.10.2:1110/sns/snsResult.jsp","withUrl":false});
-</script>
-</span> -->
-
-<!-- <a id="kakao-link-btn" href="javascript:;">
-	<img src="http://dn.api1.kage.kakao.co.kr/14/dn/btqa9B90G1b/GESkkYjKCwJdYOkLvIBKZ0/o.jpg" />
-</a> -->
 
 <div class="header" data-role="header"><a class="mainLink" onclick="location.href='main.html';">&lt;</a><p>LOG Result</p></div>
 <div id="date">
@@ -64,9 +55,7 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 	<a id="facebook" target="_blank"><img src="icon/f-Facebook.png"></a>
 	<a id="twitter" target="_blank"><img src="icon/t-twitter.png"></a>
 	<a id="kakaotalk" target="_blank" href="javascript:;"><img src="icon/k-kakao.png"></a>
-	<a id="kakaostory" target="_blank"><img src="icon/ks-kakaoStory.png"></a>
-	<a id="band" target="_blank"><img src="icon/b-BAND.png"></a>
-	
+	<a id="line" target="_blank"><img src="icon/line.png"></a>
 </div>
 
 <div class="range listNavi">
@@ -75,22 +64,28 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 	<div id="month" class="monthNavi">1M</div>
 </div>
 
+<a href="//line.me/R/msg/text/?http%3A%2F%2F127.0.0.1%3A2222%2Fsns%2FsnsResult.jsp"></a>
+<a id="line" href="http://line.me/R/msg/text/?http%3A%2F%2F127.0.0.1%3A2222%2Fsns%2FsnsResult.jsp%3Fp%3D48908b26b12246302fa39e4495eff36d7774049b"></a>
 
 </body>
+
+
+
+
 
 <script type="text/javascript">
 var shareHide = true;
 var nonHref = true;
 var txt = 'semiLog';
-var period = $('#stDt').text();
+
 var baseUrl = 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=';
 var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
-var twitterUrl = 'http://twitter.com/intent/tweet?text=' + txt + '&url='
-		
+var twitterUrl = 'http://twitter.com/intent/tweet?text=' + txt + '&url=';
+var lineUrl = 'http://line.me/R/msg/text/?';
+
 function makeHref() {
 	if (nonHref) {
-		console.log('make');
-		
+		var period = $('#stDt').text();
 		var urlParam = SHA1(userNo + new Date());
 		
 		$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
@@ -99,9 +94,10 @@ function makeHref() {
 			if (insertId != '') {
 				$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
 				$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
+				$('#line').attr('href', lineUrl + encodeURIComponent(baseUrl) + urlParam);
 				
-				
-				// 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+				$('#line>span').html('<script type="text/javascript"> new media_line_me.LineButton({"pc":true,"true":"kr","type":"d","text":"http://"+serverUrl+":2222/sns/snsResult.jsp","withUrl":false})');
+				// 카카오톡 링크 버튼을 생성. 처음 한번만 호출
 				Kakao.Link.createTalkLinkButton({
 					  container: '#kakaotalk',
 					  label: 'semiLog',
@@ -112,7 +108,7 @@ function makeHref() {
 					  },
 					  webButton: {
 					    text: 'semiLog',
-					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=' + urlParam // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=' + urlParam // kakao dev에 등록한 도메인의 URL이어야 함
 					  }
 				});
 			}
@@ -153,8 +149,8 @@ $('#shareDiv').on('click', 'a', function(e) {
 
 
 // ------------------- 카카오 Link
-//사용할 앱의 Javascript 키를 설정해 주세요.
-Kakao.init('4793e016164b581fe2eff90fc0d7550e');
+//사용할 앱의 Javascript 키 설정
+Kakao.init('	');
 
 
 </script>
