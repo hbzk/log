@@ -140,16 +140,16 @@ body {
 	color: white;
 }
 
-.listNavi .weekNavi {
-	width: 32%;
-	margin: 0px auto;
-	display: inline-block;
-}
-
 .listNavi .dateNavi {
 	width: 32%;
 	float: left;
 	background: #F2B843;
+}
+
+.listNavi .weekNavi {
+	width: 32%;
+	float: left;
+	margin-left: 2%;
 }
 
 .listNavi .monthNavi {
