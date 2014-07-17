@@ -127,34 +127,32 @@ body {
 	padding: 0px;
 	line-height: 30px;
 	text-align: center;
-	margin-bottom: 5px;
 	position: absolute;
-	bottom: 0px;
 	right: 5px;
+	bottom: 0;
 }
 
 .listNavi div {
-	font-family: 'orbitron', sans-serif;
-	height: 30px;
 	background: #FFE0A1;
+	font-family: 'orbitron', sans-serif;
+	width: 32%;
+	height: 30px;
 	color: white;
+	position: absolute;
+	bottom: 5px;
 }
 
 .listNavi .dateNavi {
-	width: 32%;
-	float: left;
 	background: #F2B843;
+	left: 0;
 }
 
 .listNavi .weekNavi {
-	width: 32%;
-	float: left;
-	margin-left: 2%;
+	left: 34%;
 }
 
 .listNavi .monthNavi {
-	width: 32%;
-	float: right;
+	right: 0;;
 }
 
 .naviColor {
