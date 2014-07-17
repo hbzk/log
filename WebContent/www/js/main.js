@@ -76,7 +76,7 @@ function dragdrop_drop() {
 			}
 	
 			/* 타이머 */
-			db.transaction(function(tx) {
+			/*db.transaction(function(tx) {
 				tx.executeSql('SELECT * FROM ACTION', [], function(tx,rs) {
 					var dragIcon = lastIcon.context.className;
 					for (var i = 0; i < 35; i++) {
@@ -90,7 +90,7 @@ function dragdrop_drop() {
 						}
 					}
 				});
-			});
+			});*/
 	
 			showAction(0); // 아이콘 배치, 타이머 출력
 	
@@ -98,8 +98,7 @@ function dragdrop_drop() {
 			actionName = lastIcon[0].attributes[0].value;
 			className = lastIcon[0].className;
 			className = className.replace(/ ui-draggable/g, '')	.replace(/ ui-droppable/g, '');
-	
-			startTime = new Date();
+			
 			db_startQuery(); // 시작 기록
 		}
 	});
@@ -119,8 +118,6 @@ function showAction(lastWhile) {
 // 타이머 구동 확인 + 저장 + 초기화
 function dragdrop_timerCheck() {
 	if ($('#timer').hasClass('iconMain')) { // 실행 중인지 확인
-		// 종료시간, 활동시간 저장
-		endTime = new Date();
 		db_endQuery(); // Query
 		stopwatch_reset(); // 타이머 초기화
 		$('#timer').html('').removeClass(); // 타이머 출력 제거
@@ -183,6 +180,7 @@ function db_selectLastRow() {
 // LOG 시작시 쿼리
 function db_startQuery() {
 	db	.transaction(function(tx) {
+		startTime = new Date();
 		tx.executeSql('INSERT INTO LOG (TITLE, CLASSNAME, START_TIME, DURATION) VALUES (?,?,?,?)'
 		,[ actionName, className,	localISOString(startTime),startTime ]
 		, function(tx, res) {
@@ -195,6 +193,7 @@ function db_startQuery() {
 function db_endQuery() {
 	db_selectLastRow(); // 마지막 행 얻기
 	db.transaction(function(tx) {
+		endTime = new Date();
 		startTime = new Date(lastRow.DURATION);
 		resultWhile = Math.floor((endTime - startTime) / 1000);
 		tx.executeSql('UPDATE LOG SET END_TIME=?, DURATION=? WHERE ID=?'

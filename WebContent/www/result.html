@@ -23,7 +23,7 @@
 opacity: 0.35;}
 #shareDiv {  position: absolute; bottom: 10%; width: 100%; 
 text-align: center; }
-#shareDiv a { width: 140px; height: 40px; display: inline-block; background: #fff;
+#shareDiv a { width: 40px; height: 40px; display: inline-block; background: #fff;
 margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
 #shareDiv img { width: 40px; height: 40px; }
 </style>
@@ -80,30 +80,46 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 
 <script type="text/javascript">
 var shareHide = true;
-
+var nonHref = true;
 var txt = 'semiLog';
 var period = $('#stDt').text();
 var baseUrl = 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=';
 var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
 var twitterUrl = 'http://twitter.com/intent/tweet?text=' + txt + '&url='
-var twitterUrl = 'http://twitter.com/intent/tweet?url='
 		
 function makeHref() {
-	console.log('make');
-	var urlParam = SHA1(userNo + new Date());
-	
-	$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
-	.done(function(insertId) {
-		console.log(insertId);
-		if (insertId != '') {
-			$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
-			$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
-			$('#shareDiv').append($('#kakaotalk').attr('href'));
-		}
-	});
+	if (nonHref) {
+		console.log('make');
 		
+		var urlParam = SHA1(userNo + new Date());
 		
-	
+		$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
+		.done(function(insertId) {
+			console.log(insertId);
+			if (insertId != '') {
+				$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
+				$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
+				
+				
+				// 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+				Kakao.Link.createTalkLinkButton({
+					  container: '#kakaotalk',
+					  label: 'semiLog',
+					  image: {
+					    src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png',
+					    width: '100',
+					    height: '100'
+					  },
+					  webButton: {
+					    text: 'semiLog',
+					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp' + urlParam // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+					  }
+				});
+			}
+		});
+		
+		nonHref = false;
+	}	
 }
 
 $(function(){
@@ -140,19 +156,6 @@ $('#shareDiv').on('click', 'a', function(e) {
 //사용할 앱의 Javascript 키를 설정해 주세요.
 Kakao.init('4793e016164b581fe2eff90fc0d7550e');
 
-// 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
-Kakao.Link.createTalkLinkButton({
-  container: '#kakaotalk',
-  label: 'semiLog',
-  image: {
-    src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png',
-    width: '100',
-    height: '100'
-  },
-  webButton: {
-    text: 'semiLog',
-    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
-  }
-});
+
 </script>
 </html>
