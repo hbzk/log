@@ -12,7 +12,7 @@
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
 <script type="text/javascript" src="js/jquery.drawDoughnutChart.js"></script>
-<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type="text/javascript" src="js/kakao-1.0.9.js"></script>
 <script type="text/javascript" src="js/sha1.js"></script>
 <script type="text/javascript" src="js/setting.js"></script>
 <script type="text/javascript" src="js/result.js"></script>
@@ -63,7 +63,7 @@ new media_line_me.LineButton({"pc":false,"true":"kr","type":"d","text":"http://1
 <div id="shareDiv" style="display: none;"><!-- style="display: none;"-->
 	<a id="facebook" target="_blank"><img src="icon/f-Facebook.png"></a>
 	<a id="twitter" target="_blank"><img src="icon/t-twitter.png"></a>
-	<a id="kakaotalk" target="_blank"><img src="icon/k-kakao.png"></a>
+	<a id="kakaotalk" target="_blank" href="javascript:;"><img src="icon/k-kakao.png"></a>
 	<a id="kakaostory" target="_blank"><img src="icon/ks-kakaoStory.png"></a>
 	<a id="band" target="_blank"><img src="icon/b-BAND.png"></a>
 	
@@ -98,7 +98,7 @@ function makeHref() {
 		if (insertId != '') {
 			$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
 			$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
-			
+			$('#shareDiv').append($('#kakaotalk').attr('href'));
 		}
 	});
 		
@@ -107,7 +107,7 @@ function makeHref() {
 }
 
 $(function(){
-	$('#share').on('click', function(){
+	$('body').on('click', '#share', function(){
 		if (shareHide) { // 숨김 상태일때 
 			$('#shareDiv').fadeToggle(1000); shareHide = false;
 			makeHref();
@@ -121,43 +121,14 @@ $(function(){
 
 
 $('#shareDiv').on('click', 'a', function(e) {
-	console.log(e);
 	var sns = e.currentTarget.id;
 	
-	// 모바일이거나, 페북이거나, 트윗이면
+	// 모바일 아니면서, 페북이나 트윗이 아니면
 	var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
-	if(isMobile || sns=='facebook' || sns=='twitter') {
-		
-		// 실제 코드
-		// 결과용 데이터 node.js 로 전송
-		/* $.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
-		.done(function(insertId) {
-			console.log(insertId);
-			if (insertId != '') {
-				
-				var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
-				console.log(facebookUrl+url);
-				
-				$('.facebook').attr('href', facebookUrl+url);
-				console.log($('.facebook'));
-				$($('.facebook')[0]).trigger('click');
-				$($('.facebook')).trigger('click');
-				$('.facebook')[0].click();
-				$('.facebook').click();
-				
-				//window.open(facebookUrl+url, '_blank');
-				
-				//sendSns(sns, url, txt);
-			} else {
-				alert('서버 점검중입니다.');
-			}
-		}); */
-	} else {
+	if(!isMobile && sns!='facebook' || sns!='twitter') {
 		e.preventDefault();
 		alert('이 기능은 모바일에서만 사용할 수 있습니다.');
 	}
-		
-	
 });
 
 
@@ -169,15 +140,15 @@ Kakao.init('4793e016164b581fe2eff90fc0d7550e');
 // 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
 Kakao.Link.createTalkLinkButton({
   container: '#kakaotalk',
-  label: 'DragLog',
+  label: 'semiLog',
   image: {
-    src: 'http://'+serverUrl+':1110/sns/img/semiLog_logo.png',
+    src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png',
     width: '100',
     height: '100'
   },
   webButton: {
-    text: 'DragLog',
-    url: 'http://'+serverUrl+':1110/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+    text: 'semiLog',
+    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp' // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
   }
 });
 </script>
