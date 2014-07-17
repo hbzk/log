@@ -261,7 +261,6 @@ path {
 }
 
 .doughnutTip {
-	font-family: sans-serif;
 	position: absolute;
 	min-width: 30px;
 	max-width: 300px;
