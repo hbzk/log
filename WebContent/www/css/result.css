@@ -257,10 +257,11 @@ body {
 }
 
 path {
-	stroke-width: 0px;
+	stroke-width: 0px !important;
 }
 
 .doughnutTip {
+	font-family: sans-serif;
 	position: absolute;
 	min-width: 30px;
 	max-width: 300px;
