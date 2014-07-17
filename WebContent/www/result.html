@@ -106,13 +106,13 @@ function makeHref() {
 					  container: '#kakaotalk',
 					  label: 'semiLog',
 					  image: {
-					    src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png',
+					    /* src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png', */
 					    width: '100',
 					    height: '100'
 					  },
 					  webButton: {
 					    text: 'semiLog',
-					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp' + urlParam // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
+					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp?p' + urlParam // 앱 설정의 웹 플랫폼에 등록한 도메인의 URL이어야 합니다.
 					  }
 				});
 			}
