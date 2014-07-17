@@ -26,13 +26,17 @@ opacity: 0.35;}
 text-align: center; }
 #shareDiv a { width: 40px; height: 40px; display: inline-block; background: #fff;
 margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
+#shareDiv #kakaotalk { background: #ffeb00;}
 #shareDiv img { width: 40px; height: 40px; }
 </style>
 </head>
 
 <body>
 
-<div class="header" data-role="header"><a class="mainLink" onclick="location.href='main.html';">&lt;</a><p>LOG Result</p></div>
+<div class="header" data-role="header"><a class="mainLink" onclick="location.href='main.html';">&lt;</a>
+	<p>LOG Result</p>
+</div>
+
 <div id="date">
 	<span class="left">&lt;</span><span class="right">&gt;</span>
 	<p id="stDt"></p>
@@ -68,89 +72,7 @@ margin: 0 1.5%; box-shadow: 2px 2px 7px #bbb; border-radius: 5px;}
 </body>
 
 
-
-
-
 <script type="text/javascript">
-var shareHide = true;
-var nonHref = true;
-var txt = 'semiLog';
-
-var baseUrl = 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=';
-var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?u=';
-var twitterUrl = 'http://twitter.com/intent/tweet?text=' + txt + '&url=';
-var lineUrl = 'http://line.me/R/msg/text/?';
-
-function makeHref() {
-	if (nonHref) {
-		var period = $('#stDt').text();
-		var urlParam = SHA1(userNo + new Date());
-		
-		$.post('http://'+serverUrl+':1111/snsShare', {urlParam: urlParam, scope: scope, period: period, result: result})
-		.done(function(insertId) {
-			console.log(insertId);
-			if (insertId != '') {
-				$('#facebook').attr('href', facebookUrl + baseUrl + urlParam);
-				$('#twitter').attr('href', twitterUrl + baseUrl + urlParam);
-				$('#line').attr('href', lineUrl + encodeURIComponent(baseUrl) + urlParam);
-				
-				// 카카오톡 링크 버튼을 생성. 처음 한번만 호출
-				Kakao.Link.createTalkLinkButton({
-					  container: '#kakaotalk',
-					  label: 'semiLog',
-					  image: {
-					    src: 'http://'+serverUrl+':2222/sns/img/semiLog_logo.png',
-					    width: '100',
-					    height: '100'
-					  },
-					  webButton: {
-					    text: 'semiLog',
-					    url: 'http://'+serverUrl+':2222/sns/snsResult.jsp?p=' + urlParam // kakao dev에 등록한 도메인의 URL이어야 함
-					  }
-				});
-				$('#line>span').html('<script type="text/javascript"> new media_line_me.LineButton({"pc":true,"true":"kr","type":"d","text":"http://'+serverUrl+':2222/sns/snsResult.jsp","withUrl":false})');
-			}
-			nonHref = false;
-		});
-		
-		
-	}	
-}
-
-$(function(){
-	$('body').on('click', '#share', function(){
-		if (shareHide) { // 숨김 상태일때 
-			$('#shareDiv').fadeToggle(1000); shareHide = false;
-			makeHref();
-		}
-		else { 
-			$('#shareDiv').fadeToggle(400); shareHide = true;
-		}
-	})
-	
-});
-
-
-$('#shareDiv').on('click', 'a', function(e) {
-	var sns = e.currentTarget.id;
-	
-	// 모바일 아니면서
-	var isMobile = (navigator.userAgent.match(/(android)|(iphone)|(ipod)|(ipad)/i));
-	if(!isMobile) {
-		// 페북이나 트위터가 아니면
-		if (sns!='facebook' && sns!='twitter') {
-		e.preventDefault();
-		alert('이 기능은 모바일에서만 사용할 수 있습니다.');
-		}
-	}
-});
-
-
-
-// ------------------- 카카오 Link
-//사용할 앱의 Javascript 키 설정
-Kakao.init('	');
-
 
 </script>
 </html>

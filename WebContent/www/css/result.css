@@ -256,6 +256,10 @@ body {
 	margin: 30px auto 10px;
 }
 
+path {
+	stroke-width: 0px;
+}
+
 .doughnutTip {
 	position: absolute;
 	min-width: 30px;

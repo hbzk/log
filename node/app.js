@@ -59,7 +59,6 @@ app.post('/snsShare', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	
-	console.log(req.body);
 	var urlParam = req.body.urlParam;
 	var scope = req.body.scope;
 	var period = req.body.period;
@@ -73,16 +72,12 @@ app.post('/snsShare', function(req,res){
 			snsSql += ', ("'+urlParam+'", "'+scope+'", "'+period+'", "'+result[i].title+'", "'+result[i].color+'", '+result[i].value+')';
 		}
 	}
-	console.log(snsSql);
 	
 	dbconn.query(snsSql, function(err, rows){
-		if (err) {
-			console.log(err);
-			res.send(null);
-            throw err;
+		if (err) { console.log(err); res.send('err');}
+		else {
+			res.send(rows.insertId.toString());
 		}
-		console.log(rows);
-		res.send(rows.insertId.toString());
 	});
 });
 
@@ -92,7 +87,6 @@ app.post('/other', function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	var me = req.body;
-	console.log(me);
 	
 	if (me.EMAIL == '' || me.GENDER == '' || me.AGE == '' || me.JOB == '' 
 		|| me.SALARY == '' || me.SPEND == '' || me.SCHOLAR == '' || me.MARRY == '') {
@@ -116,37 +110,43 @@ app.post('/other', function(req,res){
 			+ ' )'
 			+ ' AND (START_TIME < CURDATE()) ';
 		dbconn.query(usersSql ,function(err, rows) {
-			if (err) { console.log(err); throw err; }
-			if (rows.length == 0) { res.send('0users'); } 
+			if (err) { console.log(err); res.send('err');}
 			else {
-				var users = [];
-				for (var i=0; i<rows.length; i++) {
-					if (users.indexOf(rows[i].USER_NO) === -1) users.push(rows[i].USER_NO);
-				}
-				var ran = Math.floor(Math.random() * users.length);
-				var randomNo = users[ran];
-				console.log('---- Random user :' + randomNo);
-				
-				dbconn.query('SELECT * FROM USER WHERE (USER_NO = ?)', randomNo
-						,function(err, rows) {
-					if (err) { console.log(err); throw err; }
-					delete rows[0].EMAIL;
-					delete rows[0].PASSWORD;
+				if (rows.length == 0) { res.send('0users'); } 
+				else {
+					var users = [];
+					for (var i=0; i<rows.length; i++) {
+						if (users.indexOf(rows[i].USER_NO) === -1) users.push(rows[i].USER_NO);
+					}
+					var ran = Math.floor(Math.random() * users.length);
+					var randomNo = users[ran];
+					console.log('---- Random user :' + randomNo);
 					
-					var data = [];
-					data.push(rows[0]);
-					dbconn.query('SELECT * FROM LOG WHERE (USER_NO = ?) AND START_TIME>= '
+					dbconn.query('SELECT * FROM USER WHERE (USER_NO = ?)', randomNo
+					,function(err, rows) {
+						if (err) { console.log(err); res.send('err');}
+						else {
+							delete rows[0].EMAIL;
+							delete rows[0].PASSWORD;
+							
+							var data = [];
+							data.push(rows[0]);
+							dbconn.query('SELECT * FROM LOG WHERE (USER_NO = ?) AND START_TIME>= '
 							+ ' (SELECT DATE(START_TIME) AS lastSt FROM LOG WHERE (USER_NO = ?) '
 							+ ' ORDER BY lastSt DESC LIMIT 1)', [randomNo, randomNo]
-					,function(err, rows) {
-						if (err) { console.log(err); throw err; }
-						if (rows.length == 0) { res.send('0log'); }
-						else {
-							data.push(rows);
-							res.send(data);
+							,function(err, rows) {
+								if (err) { console.log(err); res.send('err');}
+								else {
+									if (rows.length == 0) { res.send('0log'); }
+									else {
+										data.push(rows);
+										res.send(data);
+									}
+								}
+							});
 						}
 					});
-				});
+				}
 			}
 		});
 	}
@@ -167,10 +167,10 @@ app.post('/submitLog', function(req, res) {
 		}
 		
 		dbconn.query(logSQL, function(err, rows){
-			if (err) { console.log(err); throw err; }
-			
-			console.log(rows);
-			res.send(rows);
+			if (err) { console.log(err); res.send('err');}
+			else {
+				res.send(rows);
+			}
 		});
 		
 	}
@@ -183,12 +183,10 @@ app.get('/createUser',function(req,res){
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	dbconn.query('INSERT INTO USER SET PASSWORD="" ', function(err, rows){
-		if (err) {
-			console.log(err);
-            throw err;
+		if (err) { console.log(err); res.send('err');}
+		else {
+			res.send(rows.insertId.toString());
 		}
-		console.log(rows);
-		res.send(rows.insertId.toString());
 	});
 });
 
@@ -199,17 +197,14 @@ app.post('/signup',function(req,res){
 	res.header("Access-Control-Allow-Headers", "X-Requested-With");
 	var user = req.body;
 	
-	console.log(user);
 	dbconn.query('UPDATE USER SET EMAIL=?, PASSWORD=?, AGE=?, GENDER=?, JOB=?, '
-			+' SALARY=?, SPEND=?, SCHOLAR=?, MARRY=? WHERE USER_NO=?',
-    		[user.email, user.password, user.age, user.gender, user.job, user.salary, user.spend, user.scholar, user.marry, user.user_no], 
-    		function(err, rows, fields){
-    		if (err) {
-        		console.log(err);
-            throw err;
-    		} else {
-        		res.send('ok');
-    		}
+	+' SALARY=?, SPEND=?, SCHOLAR=?, MARRY=? WHERE USER_NO=?',
+	[user.email, user.password, user.age, user.gender, user.job, user.salary, user.spend, user.scholar, user.marry, user.user_no],
+	function(err, rows, fields){
+		if (err) { console.log(err); res.send('err');}
+		else {
+			res.send('ok');
+		}
 	});
 });
 
@@ -223,10 +218,7 @@ app.post('/login', function(req,res){
 	var password = req.body.password;
 	
 	dbconn.query('SELECT * FROM USER WHERE EMAIL = ?', email, function(err, rows, fields){
-		if (err) {
-			console.log(err);
-            throw err;
-		}
+		if (err) { console.log(err); res.send('err');}
 		else {
 			if (rows.length == 0) {
 				res.send(false);
@@ -248,12 +240,14 @@ app.post('/emailCheck',function(req,res){
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		var email = req.body.email;
 		dbconn.query('SELECT * FROM USER WHERE EMAIL = ?', email, function(err, rows){
-			if (err) {console.log(err);}
-			if (rows.length) { 
-				res.send(true);
-			} 
-			else { 
-				res.send(false); 
+			if (err) { console.log(err); res.send('err');}
+			else {
+				if (rows.length) { 
+					res.send(true);
+				} 
+				else { 
+					res.send(false); 
+				}
 			}
 		});
 	}
@@ -263,14 +257,12 @@ app.post('/emailCheck',function(req,res){
 // (테스트 용) pathname 없으면 user list 출력
 app.get('/', function(req,res){
 	dbconn.query('SELECT * FROM USER', function(err, rows, fields){
-		if (err) {
-			console.log('Query err');
-			console.log(err);
+		if (err) { console.log(err); res.send('err');}
+		else {
+			//console.log(rows);
+			//console.log(fields);
+			res.json(rows);
 		}
-		
-		//console.log(rows);
-		//console.log(fields);
-		res.json(rows);
 	});
 });
 
