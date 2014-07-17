@@ -5,7 +5,7 @@ var morgan  = require('morgan');
 var mysql = require('mysql');
 
 var app = express();
-app.use(morgan('short')); // Logging middleware
+app.use(morgan('default')); // Logging middleware
 app.use(bodyParser());	// body parsing middleware.
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
