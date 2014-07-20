@@ -59,7 +59,6 @@ $('#resetAll').on('click', function(){
 function db_userCheck(){
 		db.transaction(function(tx){
 			tx.executeSql('SELECT * FROM USER WHERE ID = 1',[],function(tx,res){
-				
 				us_email = res.rows.item(0).EMAIL;
 				
 				if (us_email == null) {					
@@ -183,10 +182,12 @@ function setAge(age){
 function setFirstEnter(){
 	db.transaction(function(tx){
 		tx.executeSql('SELECT * FROM LOG',[],function(tx,res){
-		 	first_log = res.rows.item(0).START_TIME;
-		 	
-		 	first_log= first_log.substring(0,10);
-		 	$(".firstEnter").text(first_log);
+			if (res.rows.length != 0) {
+			 	first_log = res.rows.item(0).START_TIME;
+			 	
+			 	first_log= first_log.substring(0,10);
+			 	$(".firstEnter").text(first_log);
+			}
 		});
 	});
 }

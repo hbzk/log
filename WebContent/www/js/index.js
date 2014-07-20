@@ -5,11 +5,10 @@ $(function(){
 });
 
 function db_allDrop(){
-	console.log("alldrop");
 	db.transaction(function(tx) {
-		tx.executeSql('drop table if exists USER');
-		tx.executeSql('drop table if exists LOG');
-		tx.executeSql('drop table if exists ACTION');
+		tx.executeSql('DROP TABLE IF EXISTS ACTION');
+		tx.executeSql('DROP TABLE IF EXISTS USER');
+		tx.executeSql('DROP TABLE IF EXISTS LOG');
 		
 		db_init();
 	}, db_errorCB);
@@ -17,7 +16,6 @@ function db_allDrop(){
 
 function db_init() {
 	db.transaction(function(tx) {
-		console.log("init");
 		tx.executeSql('CREATE TABLE IF NOT EXISTS USER (ID INTEGER PRIMARY KEY, USER_NO UNIQUE, EMAIL, GENDER, AGE, JOB, SALARY, SPEND, SCHOLAR, MARRY)');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS LOG (ID INTEGER PRIMARY KEY, TITLE, CLASSNAME, START_TIME, END_TIME, DURATION)');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS ACTION (POSITION TEXT, ICON_NAME TEXT PRIMARY KEY, CLASS_NAME TEXT, TIMER_VAL INTEGER, BACK_COL TEXT)');
@@ -59,7 +57,7 @@ function db_init() {
 			+ ' UNION SELECT 0,"keyboard", "fa fa-keyboard-o", 60, "#008899"');
 		
 		// 초기화 완료 후 페이지 이동
-		//db_redirect();
+		db_redirect();
 		
 	}, db_errorCB);
 }
