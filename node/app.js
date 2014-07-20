@@ -224,7 +224,6 @@ app.post('/login', function(req,res){
 				res.send(false);
 			} else if (rows[0].PASSWORD == password) {
 				var user = rows[0];
-				console.log(user);
 				user.PASSWORD = '';
 				res.send(user);
 			} else {
